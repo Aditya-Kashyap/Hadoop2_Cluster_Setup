@@ -3,7 +3,8 @@ Here I am setting up a Hadoop Cluster
 Setting Up Hadoop Cluster
 
 Goal:
-We are making a HDFS cluster of one namenode and two datanodes. Our aim is to distribute the nodes between 2 physical machines, such that each machine contains at least 1 datanode.One of the machines will be hosting the namenode currently which will be later augmented with another standby namenode once the cluster starts getting heavy in data processing.
+1.We are making a HDFS cluster of one namenode and two datanodes. Our aim is to distribute the nodes between 2 physical machines, such that each machine contains at least 1 datanode.One of the machines will be hosting the namenode currently which will be later augmented with another standby namenode once the cluster starts getting heavy in data processing.
+
 Given Configuration
 Two laptops with ubuntu as base OS.
 
@@ -21,12 +22,14 @@ Prerequisite For both Machines:
 Software 
 Virtual Machine(KVM) 
 $ sudo apt-get install virt-manager ssh-askpass-gnome --no-install-recommends
-Redhat(7.5) 
+1. Redhat(7.5) 
 https://developers.redhat.com/products/rhel/download
-Java(JDK)
+2. Java(JDK)
 http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html
-Hadoop(v2.7.3) 
+3. Hadoop(v2.7.3) 
 https://archive.apache.org/dist/hadoop/core/
+
+
 STEPS NEEDED FOR HDFS SET-UP IN REDHAT: (will performe in both laptops )
 Setup the Virtual Machines so that they are connected with the same network(LAN)
 In the Virtual Machine: Setup the Network in eth/ens(network card) and also make this connection Bridged.(Try to do at the time of installation of OS)
@@ -43,8 +46,10 @@ Step 2: Make your local DNS on every system this file will look like this:
 192.168.0.202         datanode2.cluster1.com
 192.168.0.203         datanode3.cluster1.com
 
+
 Note: IP’s are to be changed according to the respective system.
 Make Sure that all the VM would ping each other. 
+
 
 The changes in the ‘hosts’ file is for the system to be aware of the other nodes which are trying to connect to it.
 Make IP Address Static 
@@ -103,7 +108,8 @@ Make changes in the file hdfs-site.xml
 By default hdfs-site.xml remains vacant.For clustering, Property TAG needs to be added with Name and Value pair-tags.
 
 <configuration>
-<property>
+<property># The only required environment variable is JAVA_HOME.  All others are
+# set JAVA_HOME in this file, so that it is correctly defined on
 <name>dfs.namenode.name.dir</name>
 <value>/name</value>
 </property>
@@ -119,12 +125,15 @@ By default core-site.xml remains vacant.For clustering, Property TAG needs to be
 <value>hdfs://192.168.10.120:10003</value>
 </property>
 </configuration>
+
 NOTE: The IP Address mentioned above in the name tag is the IP Address of the Name Node of HDFS. 
 (IP address mentioned here  will tell our hdfs cluster that you are the namenode.)
-   5. Format  namenode  and  start  service (As we all konw that formatting is required before using any data storage or file system)  
+  
+5. Format  namenode  and  start  service (As we all konw that formatting is required before using any data storage or file system)  
 	[]# hdfs  namenode -format 
 NOTE: The IP Address mentioned above in the name tag is the IP Address of the Name Node of HDFS. 
-   6. Start  the service of namenode 
+
+6. Start  the service of namenode 
 	[]# hadoop-daemon.sh  start  namenode 
 Used to start the Namenode and make it running.We can check its status by: []# jps: {JPS (Java Virtual Machine Process Status Tool) is a command is used to check all the Hadoop daemons like NameNode, DataNode, ResourceManager, NodeMa	nager etc. which are running on the machine}
 The Output of the JPS is:
